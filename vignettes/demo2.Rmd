@@ -85,7 +85,7 @@ for (var in quali){
   cat("\n")
   cat("\n")
   # dataset[[var]]
-  dataset %>% quali_desc(Species)
+  dataset %>% quali_desc_(var)
 
 }
   

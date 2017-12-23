@@ -1,6 +1,3 @@
-
-
-
 #' Title
 #'
 #' @param dataset
@@ -33,6 +30,33 @@ quali_desc <- function(dataset,var){
       as.formula(glue("grpXXX~ {quo_text(var)}")),
       data=dataset2,
       control=tableby.control(cat.stats = c("N","count_with_na"),total=FALSE,test = FALSE)
+    ))
+
+
+}
+
+
+
+
+#' @noRd
+#' @export
+quali_desc_ <- function(dataset,var){
+  # var <- enquo(var)
+
+  dataset2 <- rbind(dataset %>%
+                      mutate(grpXXX = "Complet"),
+                    dataset %>%
+                      mutate(grpXXX = "Sans données manquantes") %>%
+                      # filter(!is.na(var))
+                      filter(!is.na(dataset[[var]])) # la honte
+  )
+
+  summary(
+    tableby(
+      as.formula(glue("grpXXX ~ `{var}`")),
+      data=dataset2,
+      control=tableby.control(cat.stats = c("N","count_with_na"),
+                              total=FALSE,test = FALSE)
     ))
 
 

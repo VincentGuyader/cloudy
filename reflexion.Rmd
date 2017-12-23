@@ -1,0 +1,168 @@
+---
+title: "Question"
+author: "Baka"
+date: "23 décembre 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(glue)
+library(tibble)
+library(dplyr)
+library(arsenal)
+library(rlang)
+library(purrr)
+
+```
+
+
+```{r}
+
+
+#' Title
+#'
+#' @param x
+#' @param ...
+#' @importFrom  tibble column_to_rownames
+#' @import dplyr
+#' @import forcats
+#' @return
+#' @export
+#'
+
+count_with_na <- function(x,...){
+  table(x,useNA = "always") %>%
+    data.frame() %>%
+    rename(count=Freq) %>%
+    mutate(pct=count/sum(count)*100) %>%
+    mutate_all(funs(case_when(
+      is.na(.) ~ "manquant",
+      TRUE ~ as.character(.)
+    ))) %>%
+    mutate(x = forcats::as_factor(x),
+           x = forcats::fct_relevel(x,"manquant")
+    ) %>%
+    arrange(x) %>%
+    mutate_at(vars(-x),as.numeric) %>%
+    # mutate(pct= glue("{round(pct,2)} %")) %>% # trouver dans arsenal::
+    tibble::column_to_rownames("x")
+}
+
+
+
+
+#' Title
+#'
+#' @param dataset
+#' @param var
+#' @import rlang
+#' @import dplyr
+#' @importFrom  arsenal tableby tableby.control
+#' @importFrom  glue glue
+#' @import stringr
+#' @importFrom stats as.formula
+#' @return
+#' @export
+#'
+#' @examples
+#'
+#' quali_desc(iris,Species)
+#'
+quali_desc <- function(dataset,var){
+  var <- enquo(var)
+
+  dataset2 <- rbind(dataset %>%
+                      mutate(grpXXX = "Complet"),
+                    dataset %>%
+                      mutate(grpXXX = "Sans données manquantes") %>%
+                      filter(!is.na(!! var))
+  )
+
+  summary(
+    tableby(
+      as.formula(glue("grpXXX~ {quo_text(var)}")),
+      data=dataset2,
+      control=tableby.control(cat.stats = c("N","count_with_na"),total=FALSE,test = FALSE)
+    ))
+
+
+}
+
+
+quali_desc_ <- function(dataset,var){
+  # var <- enquo(var)
+
+  dataset2 <- rbind(dataset %>%
+                      mutate(grpXXX = "Complet"),
+                    dataset %>%
+                      mutate(grpXXX = "Sans données manquantes") %>%
+                      filter(!is.na(var))
+  )
+
+  summary(
+    tableby(
+      as.formula(glue("grpXXX~ {(var)}")),
+      data=dataset2,
+      control=tableby.control(cat.stats = c("N","count_with_na"),total=FALSE,test = FALSE)
+    ))
+
+
+}
+
+
+```
+
+# Import de la base
+```{r message=FALSE, warning=FALSE}
+# dataset<-readODS::read_ods("tableau de données.ods") %>% clean_names()
+data("iris")
+insert_na <- function(x, n = sample(1:25, 1)) {
+  x[sample(seq_along(x), n)] <- NA
+  x
+}
+dataset <- iris %>%
+  mutate(classe = cut(Sepal.Length, 3,
+                      labels = c("petit", "moyen", "grand"))) %>%
+  mutate_all(insert_na)
+
+```
+
+```{r}
+dataset %>% 
+  quali_desc_("Species")
+```
+
+
+
+## Variables qualitatives
+
+```{r}
+quali <- dataset %>% 
+  map_chr(class) %>% 
+  .[.%in% c("character","factor")] %>% 
+  names()
+```
+
+
+# dans l'idée je veux faire ca 
+```{r results='asis',error=TRUE}
+
+for (var in quali){
+  cat("###   ", var, "\n   ") 
+  cat("\n")
+  cat("\n")
+dataset %>%
+  quali_desc_(var)
+
+}
+  
+```
+
+
+
+

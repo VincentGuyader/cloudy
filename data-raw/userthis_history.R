@@ -9,3 +9,7 @@ usethis::use_pipe()
 usethis::use_data_raw()
 usethis::use_tidy_description()
 usethis::use_vignette("demo")
+usethis::use_vignette("demo2")
+
+usethis::use_git()
+usethis::use_github()

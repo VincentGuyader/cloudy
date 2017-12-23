@@ -1,0 +1,90 @@
+---
+title: "demo"
+author: "Vincent"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+vignette: >
+  %\VignetteIndexEntry{demo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+library(cloudy)
+library(dplyr)
+library(skimr)
+```
+
+# Import de la base
+```{r message=FALSE, warning=FALSE}
+# dataset<-readODS::read_ods("tableau de données.ods") %>% clean_names()
+data("iris")
+insert_na <- function(x, n = sample(1:25, 1)) {
+  x[sample(seq_along(x), n)] <- NA
+  x
+}
+dataset <- iris %>%
+  mutate(classe = cut(Sepal.Length, 3,
+                      labels = c("petit", "moyen", "grand"))) %>%
+  mutate_all(insert_na)
+
+```
+
+
+
+# Statistiques descriptives
+
+## variables quantitatives
+```{r include=FALSE}
+sk <- skim(dataset)
+tableau_quanti <-  sk %>% 
+  filter(type %in% c("integer","numeric")) %>%
+  dplyr::do(., skimr:::skim_render(., NULL, skimr:::print_impl)) 
+ 
+```
+
+```{r eval=TRUE}
+tableau_quanti %>% 
+  select(-hist) %>% 
+  DT::datatable()
+
+```
+
+
+## Variables qualitatives
+
+```{r results='asis' , message=FALSE, warning=FALSE}
+library(knitr)
+library(kableExtra)
+library(purrr)
+quali <- dataset %>% 
+  map_chr(class) %>% 
+  .[.%in% c("character","factor")] %>% 
+  names()
+
+
+
+for (var in quali){
+  cat("###   ", var, "\n   ") 
+  cat("\n")
+  cat("\n")
+  # dataset[[var]]
+  dataset %>% quali_desc(Species)
+
+}
+  
+```
+
+

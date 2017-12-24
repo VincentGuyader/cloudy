@@ -47,8 +47,10 @@ quali_desc_ <- function(dataset,var){
                       mutate(grpXXX = "Complet"),
                     dataset %>%
                       mutate(grpXXX = "Sans données manquantes") %>%
-                      # filter(!is.na(var))
-                      filter(!is.na(dataset[[var]])) # la honte
+                      # filter(!is.na(var)) #marche pas
+                      # filter(!is.na(dataset[[var]])) # la honte
+                    # filter_at(vars(var),any_vars(!is.na(.)))
+                    filter(!is.na(!!sym(var)))
   )
 
   summary(

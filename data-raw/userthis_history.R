@@ -13,3 +13,4 @@ usethis::use_vignette("demo2")
 
 usethis::use_git()
 usethis::use_github()
+usethis::use_test("base")

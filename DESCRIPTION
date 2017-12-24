@@ -17,7 +17,8 @@ Imports:
     tibble
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true

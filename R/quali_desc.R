@@ -15,8 +15,18 @@
 #'
 #' quali_desc(iris,Species)
 #'
-quali_desc <- function(dataset,var){
+quali_desc <- function(dataset,var,posee = dataset %>% condition()){
   var <- enquo(var)
+
+# browser()
+ dataset <-  dataset %>%
+    select(!!var) %>%
+    cbind(
+     posee %>%
+      select(!!var)%>% rename_all(function(...){"xx"}))  %>%
+    filter(xx == 1) %>%
+    select(-xx)
+
 
   dataset2 <- rbind(dataset %>%
                       mutate(grpXXX = "Complet"),
@@ -25,9 +35,12 @@ quali_desc <- function(dataset,var){
                       filter(!is.na(!! var))
   )
 
+
+
+
   summary(
     tableby(
-      as.formula(glue("grpXXX~ {quo_text(var)}")),
+      as.formula(glue("grpXXX~ `{quo_text(var)}`")),
       data=dataset2,
       control=tableby.control(cat.stats = c("N","count_with_na"),total=FALSE,test = FALSE)
     ))
@@ -61,5 +74,37 @@ quali_desc_ <- function(dataset,var){
                               total=FALSE,test = FALSE)
     ))
 
+
+}
+
+
+#' Title
+#'
+#' @param dataset
+#' @param posee
+#'
+#' @return
+#' @export
+#'
+quali_desc_all <- function(dataset,posee = dataset %>% condition()){
+
+
+  quali <- dataset %>%
+    map_chr(~class(.x)[[1]]) %>%
+    .[.%in% c("character","factor")] %>%
+    names()
+
+
+
+  for (var in quali){
+    cat("###   ", var, "\n   ")
+    cat("\n")
+    cat("\n")
+    # demo_cloudy[[var]]
+    # demo_cloudy %>% quali_desc( !! sym(var))
+    # demo_cloudy %>% quali_desc_(var)
+    demo_cloudy %>% quali_desc(!! sym(var),posee = posee )
+
+  }
 
 }

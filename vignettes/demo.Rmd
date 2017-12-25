@@ -25,6 +25,10 @@ knitr::opts_chunk$set(
 library(cloudy)
 library(dplyr)
 library(skimr)
+library(knitr)
+library(kableExtra)
+library(purrr)
+library(rlang)
 ```
 
 # Import de la base
@@ -66,9 +70,7 @@ tableau_quanti %>%
 ## Variables qualitatives
 
 ```{r results='asis' , message=FALSE, warning=FALSE,error=TRUE}
-library(knitr)
-library(kableExtra)
-library(purrr)
+
 quali <- dataset %>% 
   map_chr(class) %>% 
   .[.%in% c("character","factor")] %>% 
@@ -82,7 +84,8 @@ for (var in quali){
   cat("\n")
   # dataset[[var]]
   # dataset %>% quali_desc(one_of(var))
-  dataset %>% quali_desc_(var)
+  # dataset %>% quali_desc_(var)
+  dataset %>% quali_desc(!! sym(var))
 }
   
 ```

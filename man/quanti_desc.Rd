@@ -6,9 +6,6 @@
 \usage{
 quanti_desc(dataset, var, posee = dataset \%>\% condition())
 }
-\arguments{
-\item{posee}{}
-}
 \description{
 Title
 }

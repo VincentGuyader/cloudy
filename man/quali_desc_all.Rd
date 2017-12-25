@@ -6,9 +6,6 @@
 \usage{
 quali_desc_all(dataset, posee = dataset \%>\% condition())
 }
-\arguments{
-\item{posee}{}
-}
 \description{
 Title
 }

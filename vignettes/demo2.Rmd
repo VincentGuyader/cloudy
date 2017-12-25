@@ -26,30 +26,21 @@ library(cloudy)
 library(dplyr)
 library(skimr)
 library(tibble)
+library(knitr)
+library(kableExtra)
+library(purrr)
+library(rlang)
+library(tidyverse)
 ```
 
 # Import de la base
 ```{r message=FALSE, warning=FALSE}
-insert_na <- function(x, nmax=25, n = sample(1:nmax, 1)) {
-  x[sample(seq_along(x), n)] <- NA
-  x
-}
 
 
-library(tidyverse)
-dataset <- structure(list(id = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), age = c(12, 
-43, NA, 21, 2, 56, 7, 8, 9, 3), sexe = c("F", "F", "M", NA, "F", 
-"M", "M", "F", "F", "M"), `tu fume ?` = c("non", "non", "oui", 
-"oui", "non", "oui", NA, "non", "non", "oui"), `tu fume combien ?` = c(NA, 
-NA, 2, 3, NA, NA, NA, NA, NA, 5), `date des derniere regles` = structure(c(1496361600, 
-1493942400, NA, 1493942400, 1485907200, 1496448000, NA, 1496448000, 
-NA, NA), class = c("POSIXct", "POSIXt"), tzone = "UTC"), `ca va ?` = c("oui", 
-"non", "oui", "non", "non", "non", "non", "oui", "oui", "oui"
-)), .Names = c("id", "age", "sexe", "tu fumes ?", "tu fumes combien ?", 
-"date des derniere regles", "ca va ?"), class = c("tbl_df", "tbl", 
-"data.frame"), row.names = c(NA, -10L))
 
-# dataset <- rbind(dataset,dataset,dataset) %>%
+data("demo_cloudy")
+dataset <- demo_cloudy
+# demo_cloudy <- rbind(demo_cloudy,demo_cloudy,demo_cloudy) %>%
 #   mutate_all(insert_na,4)
 
 ```
@@ -57,48 +48,12 @@ NA, NA), class = c("POSIXct", "POSIXt"), tzone = "UTC"), `ca va ?` = c("oui",
 
 #matrice de validite
 ```{r}
-base <- dataset
-base[]<-NA
-base
-
-conditionne <- function(dataset,condition,reponse){
-  dataset %>% 
-  mutate(tfc = case_when(
-    `tu fume ?` == "non" ~ 0,
-    is.na(`tu fume ?`)  ~ 0,
-    TRUE ~ 1
-  )) %>% 
-  select(tfc,`tu fume ?`)
-  
-  
-}
-
-
-dataset %>% 
-  conditon(`tu fume combien ?`, `tu fume ? == 'oui'`) %>% 
-  conditon(`date des derniere regles`, `sexe == 'F'`)
-
-
-
-dataset %>% 
-  conditon(
-    "tu fume combien ?" = list(`tu fume ?` == 'oui'),
-    "date des derniere regles" = list(sexe == 'F')       
-  )       
-
-
-
-
-dataset %>% 
-  mutate(tfc = case_when(
-    `tu fume ?` == "non" ~ 0,
-    is.na(`tu fume ?`)  ~ 0,
-    TRUE ~ 1
-  )) %>% 
-  select(tfc,`tu fume ?`)
-
-
-
+posee <- dataset %>%
+ condition(
+   "tu fumes combien ?" = list(`tu fumes ?` == 'oui' & age > 18)
+   , "date des derniere regles" = list(sexe == 'F'),
+   "sexe" = list(age > 18)
+ )
 ```
 
 
@@ -109,11 +64,7 @@ dataset %>%
 
 ## variables quantitatives
 ```{r include=FALSE}
-sk <- skim(dataset)
-tableau_quanti <-  sk %>% 
-  filter(type %in% c("integer","numeric")) %>%
-  dplyr::do(., skimr:::skim_render(., NULL, skimr:::print_impl)) 
- 
+tableau_quanti <- quanti_desc_all(demo_cloudy,posee = posee)
 ```
 
 ```{r eval=TRUE}
@@ -124,28 +75,12 @@ tableau_quanti %>%
 ```
 
 
+
 ## Variables qualitatives
 
 ```{r results='asis' , message=FALSE, warning=FALSE}
-library(knitr)
-library(kableExtra)
-library(purrr)
-quali <- dataset %>% 
-  map_chr(~class(.x)[[1]]) %>% 
-  .[.%in% c("character","factor")] %>% 
-  names()
-
-
-
-for (var in quali){
-  cat("###   ", var, "\n   ") 
-  cat("\n")
-  cat("\n")
-  # dataset[[var]]
-  dataset %>% quali_desc_(var)
-
-}
-  
+quali_desc_all(demo_cloudy,posee = posee)
 ```
+
 
 

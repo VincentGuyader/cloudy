@@ -4,7 +4,7 @@
 #' @param dataset
 #' @param var
 #' @param posee
-#'
+#' @import skimr
 #' @return
 #' @export
 #'
@@ -34,7 +34,8 @@ quanti_desc   <- function(dataset,var,posee = dataset %>% condition()){
 #'
 #' @param dataset
 #' @param posee
-#'
+#' @importFrom purrr map_chr
+#' @importFrom purrr map_df
 #' @return
 #' @export
 #'

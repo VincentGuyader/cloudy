@@ -52,6 +52,7 @@ quali_desc <- function(dataset,var,posee = dataset %>% condition()){
 
 
 #' @noRd
+#' @import dplyr
 #' @export
 quali_desc_ <- function(dataset,var){
   # var <- enquo(var)
@@ -82,6 +83,8 @@ quali_desc_ <- function(dataset,var){
 #'
 #' @param dataset
 #' @param posee
+#' @importFrom purrr map_chr
+#' @import rlang
 #'
 #' @return
 #' @export
@@ -103,7 +106,7 @@ quali_desc_all <- function(dataset,posee = dataset %>% condition()){
     # demo_cloudy[[var]]
     # demo_cloudy %>% quali_desc( !! sym(var))
     # demo_cloudy %>% quali_desc_(var)
-    demo_cloudy %>% quali_desc(!! sym(var),posee = posee )
+    dataset %>% quali_desc(!! sym(var),posee = posee )
 
   }
 

@@ -38,13 +38,15 @@ quali_desc <- function(dataset,var,posee = dataset %>% condition()){
 
 if (nrow(dataset2) == 0) {return(NULL)}
 
-  summary(
+dataset2 <-  dataset2 %>% mutate_if(is.factor,as.character)
+dataset2[is.na(dataset2)]<-"manquant"
+
+summary(
     tableby(
       as.formula(glue("grpXXX~ `{quo_text(var)}`")),
       data=dataset2,
-      control=tableby.control(cat.stats = c("N","count_with_na"),total=FALSE,test = FALSE)
+      control=tableby.control(cat.stats = c("N","Nmiss","countpct"),total=FALSE,test = FALSE)
     ))
-
 
 }
 

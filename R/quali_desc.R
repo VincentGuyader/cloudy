@@ -112,7 +112,9 @@ quali_desc_all <- function(dataset,posee = dataset %>% condition()){
     # demo_cloudy[[var]]
     # demo_cloudy %>% quali_desc( !! sym(var))
     # demo_cloudy %>% quali_desc_(var)
-    dataset %>% quali_desc(!! sym(var),posee = posee )
+    dataset %>% quali_desc(!! sym(var),posee = posee ) %>% print()# ou des CAT ?
+    cat("\n")
+    cat("\n")
 
   }
 

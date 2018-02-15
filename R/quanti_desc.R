@@ -45,7 +45,7 @@ quanti_desc_all <- function(dataset,posee = dataset %>% condition()){
     map_chr(~class(.x)[[1]]) %>%
     .[.%in% c("numeric","integer","double")] %>%
     names()
-
+if (length(quanti) == 0){return(NULL)}
   quanti %>%
     map_df(~ quanti_desc(dataset,var = !! sym(.x),posee = posee))
 

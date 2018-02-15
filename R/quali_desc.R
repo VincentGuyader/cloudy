@@ -36,7 +36,7 @@ quali_desc <- function(dataset,var,posee = dataset %>% condition()){
   )
 
 
-
+if (nrow(dataset2) == 0) {return(NULL)}
 
   summary(
     tableby(
@@ -96,6 +96,10 @@ quali_desc_all <- function(dataset,posee = dataset %>% condition()){
     map_chr(~class(.x)[[1]]) %>%
     .[.%in% c("character","factor")] %>%
     names()
+
+# on supprime de quali les question jamias posée
+
+  quali <- setdiff(quali,names(posee)[posee %>% colSums() == 0])
 
 
 

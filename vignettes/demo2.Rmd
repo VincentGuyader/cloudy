@@ -68,6 +68,7 @@ tableau_quanti <- quanti_desc_all(demo_cloudy,posee = posee)
 ```
 
 ```{r eval=TRUE}
+
 tableau_quanti %>% 
   select(-hist) %>% 
   DT::datatable()

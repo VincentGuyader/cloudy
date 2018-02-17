@@ -109,7 +109,7 @@ quali_desc_all <- function(dataset,posee = dataset %>% condition()){
   quali <- setdiff(quali,names(posee)[posee %>% colSums() == 0])
 
 
-
+out <- list()
   for (var in quali){
     cat("###   ", var, "\n   ")
     cat("\n")
@@ -117,10 +117,14 @@ quali_desc_all <- function(dataset,posee = dataset %>% condition()){
     # demo_cloudy[[var]]
     # demo_cloudy %>% quali_desc( !! sym(var))
     # demo_cloudy %>% quali_desc_(var)
-    dataset %>% quali_desc(!! sym(var),posee = posee ) %>% print()# ou des CAT ?
+    res <- dataset %>%
+      quali_desc(!! sym(var),posee = posee )
+    res %>% print()# ou des CAT ?
+    out <- c(out,res)
     cat("\n")
     cat("\n")
 
   }
-
+names(out)<- quali
+invisible(out)
 }

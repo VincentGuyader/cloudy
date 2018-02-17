@@ -15,6 +15,8 @@
 #'
 #' quali_desc(iris,Species)
 #'
+
+
 quali_desc <- function(dataset,var,posee = dataset %>% condition()){
   var <- enquo(var)
 
@@ -37,8 +39,11 @@ quali_desc <- function(dataset,var,posee = dataset %>% condition()){
 
 
 if (nrow(dataset2) == 0) {return(NULL)}
+# browser()
+dataset2 <-  dataset2 %>%
+  mutate_if(is.factor,~forcats::lvls_expand(.,c(levels(.),"manquant")))
 
-dataset2 <-  dataset2 %>% mutate_if(is.factor,as.character)
+
 dataset2[is.na(dataset2)]<-"manquant"
 
 summary(

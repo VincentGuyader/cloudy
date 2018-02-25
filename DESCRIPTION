@@ -4,9 +4,9 @@ Version: 0.0.0.9000
 Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 License: GPL-3
-Depends: 
+Depends:
     R (>= 3.4.2)
-Imports: 
+Imports:
     arsenal,
     dplyr,
     forcats,
@@ -15,8 +15,9 @@ Imports:
     rlang (>= 0.1.2),
     stringr,
     tibble,
-    purrr
-Suggests: 
+    purrr,
+    Hmisc
+Suggests:
     knitr,
     rmarkdown,
     testthat

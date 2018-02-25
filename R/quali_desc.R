@@ -17,8 +17,21 @@
 #'
 
 
-quali_desc <- function(dataset,var,posee = dataset %>% condition()){
-  var <- enquo(var)
+quali_desc <- function(dataset,var,
+                       posee = dataset %>% condition(),
+                       tidy=TRUE){
+  if (tidy) {
+    var <- quo(!!quo_text(enquo(var)) %>%
+                 str_replace_all("_", " "))
+    posee <- posee %>% rename_all(~str_replace_all(.,"_"," "))
+    dataset <- dataset %>% rename_all(~str_replace_all(.,"_"," "))
+
+  } else{
+    var <- enquo(var)
+
+  }
+  posee <- comble_posee(dataset,posee)
+
 
 # browser()
  dataset <-  dataset %>%
@@ -41,6 +54,7 @@ quali_desc <- function(dataset,var,posee = dataset %>% condition()){
 if (nrow(dataset2) == 0) {return(NULL)}
 # browser()
 dataset2 <-  dataset2 %>%
+  mutate_all(as.factor) %>%
   mutate_if(is.factor,~forcats::lvls_expand(.,c(levels(.),"manquant")))
 
 
@@ -92,13 +106,20 @@ quali_desc_ <- function(dataset,var){
 #' @param posee
 #' @importFrom purrr map_chr
 #' @import rlang
+#' @importFrom Hmisc capitalize
 #'
 #' @return
 #' @export
 #'
-quali_desc_all <- function(dataset,posee = dataset %>% condition()){
+quali_desc_all <- function(dataset,
+                           posee = dataset %>% condition(),tidy=TRUE){
+  if (tidy) {
+    posee <- posee %>% rename_all(~str_replace_all(.,"_"," "))
+    dataset <- dataset %>% rename_all(~str_replace_all(.,"_"," "))
 
+  }
 
+  posee <- comble_posee(dataset,posee)
   quali <- dataset %>%
     map_chr(~class(.x)[[1]]) %>%
     .[.%in% c("character","factor")] %>%
@@ -111,14 +132,14 @@ quali_desc_all <- function(dataset,posee = dataset %>% condition()){
 
 out <- list()
   for (var in quali){
-    cat("###   ", var, "\n   ")
+    cat("###   ", Hmisc::capitalize(var), "\n   ")
     cat("\n")
     cat("\n")
     # demo_cloudy[[var]]
     # demo_cloudy %>% quali_desc( !! sym(var))
     # demo_cloudy %>% quali_desc_(var)
     res <- dataset %>%
-      quali_desc(!! sym(var),posee = posee )
+      quali_desc(!! sym(var),posee = posee ,tidy=FALSE)
     res %>% print()# ou des CAT ?
     out <- c(out,res)
     cat("\n")

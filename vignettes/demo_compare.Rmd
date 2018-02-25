@@ -1,0 +1,59 @@
+---
+title: "Untitled"
+author: "Vincent"
+date: "25 février 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+library(rlang)
+library(tidyverse)
+library(arsenal)
+```
+
+```{r}
+
+#'
+#'
+compare <- function(dataset,var,tidy=TRUE) {
+
+  if ( tidy ){
+    var <- sym(quo_text(enquo(var)) %>% str_replace_all("_"," "))
+    dataset <- dataset%>%
+      rename_all(~str_replace_all(.,"_"," "))
+  }else{
+    var <- enquo(var)
+  }
+  formule <- rlang::new_formula(get_expr(var),quote(.))
+  summary(arsenal::tableby(  formule,data=dataset ))
+}
+```
+
+
+```{r results='asis'}
+compare(iris,Species)
+```
+
+
+```{r results='asis'}
+compare(iris %>% rename(Spec_ies=Species),Spec_ies)
+```
+
+
+
+```{r results='asis'}
+compare(iris %>% rename(Spec_ies=Species),Spec_ies,tidy=FALSE)
+```
+
+
+```{r results='asis'}
+compare(iris %>% thinkr::clean_names(),sepal_length,tidy=FALSE)
+```
+
+```{r results='asis'}
+compare(iris %>% thinkr::clean_names(),sepal_length,tidy=TRUE)
+```

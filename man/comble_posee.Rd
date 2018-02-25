@@ -6,9 +6,6 @@
 \usage{
 comble_posee(dataset, posee)
 }
-\arguments{
-\item{posee}{}
-}
 \description{
 comble posee avec les eventuelle colonne rajouté, comme si elles avaient été posée a tout le monde
 }

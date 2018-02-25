@@ -48,7 +48,12 @@ ggplot(aes(x = Var, y = Freq)) +
 #' @examples
 #' dessin_quali_all(iris)
 #'
-dessin_quali_all <- function(dataset,groupe){
+dessin_quali_all <- function(dataset,groupe,tidy=TRUE){
+
+  if ( tidy ){
+    dataset <- dataset%>% rename_all(~str_replace_all(.,"_"," "))
+
+  }
 
   if ( is_missing(groupe)){
 

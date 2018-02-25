@@ -4,7 +4,7 @@
 \alias{quanti_desc}
 \title{Title}
 \usage{
-quanti_desc(dataset, var, posee = dataset \%>\% condition())
+quanti_desc(dataset, var, posee = dataset \%>\% condition(), tidy = TRUE)
 }
 \description{
 Title

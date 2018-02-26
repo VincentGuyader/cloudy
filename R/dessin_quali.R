@@ -11,17 +11,29 @@
 #' @examples
 #' dessin_quali_var(iris,Species)
 #' dessin_quali(iris$Species)
-dessin_quali_var <- function(dataset,var,groupe){
+#'
+#' dessin_quali(iris$Species,"coucou",camembert = TRUE)
+#' dessin_quali(iris$Species,"coucou",camembert = FALSE)
+#' dessin_quali_var(dataset = iris,var = Species,camembert = TRUE)
+#' dessin_quali_var(dataset = iris,var = Species,camembert = FALSE)
+#' dessin_quali_all(iris)
+#' dessin_quali_all(iris,camembert = TRUE)
+#'
+dessin_quali_var <- function(dataset,var,groupe,camembert = FALSE){
+#   var <- enquo(var)
+#   dataset %>% pull(!!var) %>%
+#   table() %>%
+#   as.data.frame() %>%
+#   setNames(c("Var","Freq")) %>%
+# ggplot(aes(x = Var, y = Freq)) +
+#   geom_bar(stat = "identity", color = "black", fill = "grey") +
+#   labs(title = "", x = paste("\n",quo_text(var)), y = "Frequence\n") +
+#   theme_classic()
   var <- enquo(var)
-  dataset %>% pull(!!var) %>%
-  table() %>%
-  as.data.frame() %>%
-  setNames(c("Var","Freq")) %>%
-ggplot(aes(x = Var, y = Freq)) +
-  geom_bar(stat = "identity", color = "black", fill = "grey") +
-  labs(title = "", x = paste("\n",quo_text(var)), y = "Frequence\n") +
-  theme_classic()
+  dessin_quali(var = dataset %>% pull( !! var) ,nom = quo_text(var),camembert = camembert)
+
 }
+
 
 
 dessin_quali <- function(var,nom,camembert = FALSE){
@@ -44,9 +56,9 @@ ggplot(aes(x = Var, y = Freq)) +
       table() %>%
       as.data.frame() %>%
       setNames(c("Var","Freq")) %>%
-      ggplot( aes(x=factor(1), fill=Var))+
-      geom_bar(width = 1)+
-      coord_polar("y") +
+      ggplot( aes(x="", y=Freq, fill=Var))+
+      geom_bar(width = 1, stat = "identity") +
+      coord_polar("y", start=0) +
       # theme_classic()+
       theme(axis.text.x=element_blank()) +
       theme(plot.background = element_blank(),
@@ -59,7 +71,8 @@ ggplot(aes(x = Var, y = Freq)) +
       )+labs(Var="coucou")+
       theme(rect = element_rect(fill = NA,
                                size = 12, colour = NA, linetype = 0), panel.background = element_rect(fill = NA))+
-        scale_fill_discrete(name = "")+ggtitle(nom)
+      viridis::scale_fill_viridis(name = "",discrete = TRUE)+
+      ggtitle(nom)
   }
   out
 }

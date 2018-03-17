@@ -52,7 +52,8 @@ condition <- function(dataset, ...){
   # browser()
 for (d in seq_along(dots)){
   dataset <-  dataset %>%
-        mutate(!!!paste0(names( dots[d]),"_cond") := case_when(
+        # mutate(!!!paste0(names( dots[d]),"_cond") := case_when(
+        mutate(!!paste0(names( dots[d]),"_cond") := case_when(
           unlist(eval_tidy(!!dots[[d]] )) ~ 1,
           TRUE ~ 0
         )

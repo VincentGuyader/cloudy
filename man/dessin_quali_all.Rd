@@ -4,7 +4,7 @@
 \alias{dessin_quali_all}
 \title{Title}
 \usage{
-dessin_quali_all(dataset, groupe)
+dessin_quali_all(dataset, groupe, tidy = TRUE, camembert = FALSE)
 }
 \arguments{
 \item{dataset}{un data.frame}

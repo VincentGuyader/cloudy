@@ -4,7 +4,7 @@
 \alias{dessin_quali_var}
 \title{Title}
 \usage{
-dessin_quali_var(dataset, var, groupe)
+dessin_quali_var(dataset, var, groupe, camembert = FALSE)
 }
 \arguments{
 \item{var}{}
@@ -15,4 +15,12 @@ Title
 \examples{
 dessin_quali_var(iris,Species)
 dessin_quali(iris$Species)
+
+dessin_quali(iris$Species,"coucou",camembert = TRUE)
+dessin_quali(iris$Species,"coucou",camembert = FALSE)
+dessin_quali_var(dataset = iris,var = Species,camembert = TRUE)
+dessin_quali_var(dataset = iris,var = Species,camembert = FALSE)
+dessin_quali_all(iris)
+dessin_quali_all(iris,camembert = TRUE)
+
 }

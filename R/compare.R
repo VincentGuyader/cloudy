@@ -3,6 +3,7 @@
 #' @param dataset
 #' @param var
 #' @param tidy
+#' @param ... additional arguments to be passed to internal tableby functions or tableby.control.
 #'
 #' @return
 #' @export
@@ -14,7 +15,7 @@
 #' compare(iris %>% rename(Spec_ies=Species),Spec_ies,tidy=FALSE)
 #'
 #'
-compare <- function(dataset,var,tidy=TRUE) {
+compare <- function(dataset,var,tidy=TRUE,...) {
 
   if ( tidy ){
     var <- sym(quo_text(enquo(var)) %>% str_replace_all("_"," "))
@@ -24,7 +25,7 @@ compare <- function(dataset,var,tidy=TRUE) {
     var <- enquo(var)
   }
   formule <- rlang::new_formula(get_expr(var),quote(.))
-  summary(arsenal::tableby(  formule,data=dataset ))
+  summary(arsenal::tableby(  formule,data=dataset, ... ))
 }
 
 

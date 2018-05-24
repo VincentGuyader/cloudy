@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_inverse}
 \alias{compare_inverse}
-\title{Title}
+\title{compare mais retourne les tableau}
 \usage{
 compare_inverse(dataset, var, tidy = TRUE)
 }
@@ -10,5 +10,5 @@ compare_inverse(dataset, var, tidy = TRUE)
 \item{tidy}{}
 }
 \description{
-Title
+compare mais retourne les tableau
 }
